@@ -33,3 +33,7 @@ plt.imshow(result,cmap='gray')
 #call the extract function and show the result
 face = recoverCatFace(cat)
 plt.imshow(face,cmap='gray')
+
+#Change the path ! 
+#Only doing that if "face" is not empty
+cv2.imwrite('./Dataset/Autres/test/randomCatFace.jpg',face)
