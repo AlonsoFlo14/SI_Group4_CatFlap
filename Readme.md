@@ -1,4 +1,4 @@
-# SI - Group4 - Cat Flap
+# SI - Group4 - Dog Flap
 This file is set to resume the project.
 
 ## Presentation
@@ -15,4 +15,10 @@ Based on artificial intelligence courses and lessons learned on image and video 
 -Function to extract cat's face and result display added
 -Imwrite added to save the image present in "face" in a new folder. This method is used to save an image to any storage device. It returns true if image is saved successfully and false If "face" is empty.
 -Creation of a code which detect, extract and save the face of a cat via the webcam
--Creation of the dataset, generation of cat faces photos due to the "save
+(-Creation of the dataset, generation of cat faces photos due to the "save)
+DELETION OF THE CATS DATASET (It will be replaced by a dogs dataset)
+
+### Second week (23/03/2020-29/03/2020)
+-We developt with the professor on the proposed subject to approve and improve the project.
+-->Changes made: To meet a need that does not yet exist on the market, we will make a dog flap instead of a cat flap. The hatch will therefore be larger and the advantage of blocking the hatch will therefore be present to avoid the entry of small animals.
+-Implementation of a second branch concerning the project functionalities (speakers, display, ...) which will be managed by an Arduino.
