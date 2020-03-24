@@ -13,4 +13,6 @@ The part concerning artificial intelligence will be managed by the raspberry and
 Based on artificial intelligence courses and lessons learned on image and video processing, we have created a classic python program including :
 -Creation of a python code which detect the face of cats on images
 -Function to extract cat's face and result display added
--Imwrite added to save the image present in "face" in a new folder. This method is used to save an image to any storage device. It returns true if image is saved successfully and false If "face" is empty. 
+-Imwrite added to save the image present in "face" in a new folder. This method is used to save an image to any storage device. It returns true if image is saved successfully and false If "face" is empty.
+-Creation of a code which detect, extract and save the face of a cat via the webcam
+-Creation of the dataset, generation of cat faces photos due to the "save
