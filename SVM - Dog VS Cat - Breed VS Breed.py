@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # SVM - Dogs VS Cats detection
+# # SVM - Dogs breed detection
 
 # ## Librairies
 
@@ -45,7 +45,7 @@ def extract_color_histogram(image, bins=(8, 8, 8)):
 
 
 #get path of images in dataset
-imagePaths = list(paths.list_images('./DATA/dogs-vs-cats/train/'))
+imagePaths = list(paths.list_images('./DATA/MyDogs_Breeds/'))
 
 
 # In[4]:
@@ -68,20 +68,33 @@ for (i, imagePath) in enumerate(imagePaths):
     data.append(hist)
     labels.append(label)
 
-    if i > 0 and i % 1000 == 0:
+    if i > 0 and i % 45 == 0:
         print("{}/{}".format(i, len(imagePaths)))
 
 
 # In[6]:
 
 
+#labels
+
+
+# In[7]:
+
+
 #Label encoding
 le = LabelEncoder()
 labels = le.fit_transform(labels)
 labels = le.inverse_transform(labels)
+#labels
 
 
-# In[7]:
+# In[8]:
+
+
+le.classes_
+
+
+# In[9]:
 
 
 #Splitiing dataset to train and test
@@ -90,24 +103,40 @@ trainData, testData, trainLabels, testLabels = train_test_split(np.array(data), 
 
 # ## SVM part
 
-# In[8]:
+# In[10]:
 
 
 #Support Vector Machine
-model = LinearSVC()
+#model = LinearSVC()  #24-36-27-43%
+#model.fit(trainData, trainLabels)
+
+#Import svm model
+from sklearn import svm
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.svm import LinearSVC
+from sklearn.svm import SVC
+#model = OneVsRestClassifier(LinearSVC()) #24-36-27-43%
+#model = svm.LinearSVC() #24-36-27-43%
+#Create a svm Classifier
+#model = svm.SVC(kernel='linear',verbose=True) # Linear Kernel better %35-37-45-48
+#model = svm.SVC(kernel='poly',verbose=True) # better %50-40-38-41
+model = svm.SVC(kernel='rbf') # better %48-41-41-54
+#model = svm.SVC(kernel='sigmoid',verbose=True) # better %35-34-41-52
+#model = SVC(decision_function_shape='ovo') #better %48-41-41-54
+#Train the model using the training sets
 model.fit(trainData, trainLabels)
 
 
-# In[9]:
+# In[11]:
 
 
-#Evaluating
+# Evaluating
 predictions = model.predict(testData)
 #print(classification_report(testLabels, predictions,target_names=le.classes_))
 print(classification_report(testLabels, predictions))
 
 
-# In[10]:
+# In[12]:
 
 
 #Save the model
@@ -117,11 +146,11 @@ f.close()
 #model = cPickle.loads(open('model.cpickle', "rb").read())
 
 
-# In[11]:
+# In[13]:
 
 
 #Predict a picture
-singleImage = cv2.imread('./DATA/dogs-vs-cats/test1/test1/2.jpg')
+singleImage = cv2.imread('./beagleTEST5.jpg')
 histt = extract_color_histogram(singleImage)
 histt2 = histt.reshape(1, -1)
 prediction = model.predict(histt2)
