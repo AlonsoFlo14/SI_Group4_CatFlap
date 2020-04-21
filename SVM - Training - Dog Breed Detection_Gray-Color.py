@@ -27,8 +27,8 @@ from tensorflow.keras.utils import to_categorical
 
 normalize=1
 #num_classes = 10
-img_height = 245
-img_width = 245
+img_height = 125
+img_width = 125
 
 
 # ## Pre-processing
@@ -38,9 +38,10 @@ img_width = 245
 
 #Image processing
 def path_to_tensor(img_path):
-    gray = cv2.imread(img_path, 0)
-    resized_gray = cv2.resize(gray,(img_height,img_width))
-    x = np.array(resized_gray)
+    color = cv2.imread(img_path, 1)
+    color = cv2.cvtColor(color, cv2.COLOR_RGB2BGR)
+    resized_color = cv2.resize(color,(img_height,img_width))
+    x = np.array(resized_color)
     return np.expand_dims(x, axis=0)
 #Apply image processing to each image, path
 def paths_to_tensor(img_paths):
@@ -143,9 +144,9 @@ y_train.shape
 #X_test  = X_test.reshape(num_test, img_width , img_height,1)
 
 nb_train = X_train.shape[0]
-X_train = X_train.reshape(nb_train,245*245*1)
+X_train = X_train.reshape(nb_train,125*125*3)
 nb_test = X_test.shape[0]
-X_test = X_test.reshape(nb_test,245*245*1)
+X_test = X_test.reshape(nb_test,125*125*3)
 
 y_train = np.array(y_train)
 label_encoder_train = LabelEncoder()
