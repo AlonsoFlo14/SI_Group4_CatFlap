@@ -5,7 +5,7 @@
 
 # ## Librairies
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -13,6 +13,7 @@ import re
 import h5py
 import PIL
 import cv2
+import pickle
 import pandas as pd
 import numpy as np 
 import matplotlib.pyplot as plt
@@ -79,14 +80,14 @@ def dog_detector(img_path):
 
 # ## Transfert Learning
 
-# In[ ]:
+# In[2]:
 
 
-img_height = 125
-img_width = 125
+img_height = 224
+img_width = 224
 
 
-# In[ ]:
+# In[3]:
 
 
 def generate_unique_logpath(logdir, raw_run_name):
@@ -99,7 +100,7 @@ def generate_unique_logpath(logdir, raw_run_name):
         i = i + 1
 
 
-# In[ ]:
+# In[4]:
 
 
 def path_to_tensor(img_path):
@@ -116,7 +117,7 @@ def paths_to_tensor(img_paths):
     return np.vstack(list_of_tensors)
 
 
-# In[ ]:
+# In[5]:
 
 
 def extract_Resnet50(tensor):
@@ -124,42 +125,54 @@ def extract_Resnet50(tensor):
     return bottleneck_feature
 
 
-# In[ ]:
+# In[6]:
 
 
 train_dir = '../dogFlap/dog-breed-identification/train/'
 list_train = [train_dir+f for f in os.listdir(train_dir) if re.search('jpg|JPG', f)]
 
 
-# In[ ]:
+# In[7]:
 
 
 data = pd.read_csv('../dogFlap/dog-breed-identification/labels.csv')
 train_labels = data.iloc[:,1].values
 
 
-# In[ ]:
+# In[81]:
 
 
 dog_names = data.groupby("breed").count()
 len(dog_names)
 #dog_names = dog_names.rename(columns = {"id" : "count"})
 #dog_names = dog_names.sort_values("count", ascending=False)
+dog_names = dog_names.index
+dog_names
 
 
-# In[ ]:
+# In[9]:
 
 
-train_tensors = paths_to_tensor(list_train).astype('float32')/255
+train_tensors = paths_to_tensor(list_train)
+del  list_train
+#pickle_out = open("train_tensors.pickle","wb")
+#pickle.dump(paths_to_tensor(list_train).astype('float32')/255, pickle_out)
+#pickle_out.close()
 
 
-# In[ ]:
+# In[10]:
 
 
+#pickle_in = open("train_tensors.pickle","rb")
+#train = pickle.load(pickle_in)
 X_train, X_test, y_train, y_test = train_test_split(train_tensors,train_labels,test_size=0.20,random_state=42)
+del train_tensors, train_labels
+#pickle_out = open("train_tensors.pickle","wb")
+#pickle.dump(train_tensors, pickle_out)
+#pickle_out.close()
 
 
-# In[ ]:
+# In[11]:
 
 
 print('(',X_train.shape[0],',',X_train.shape[1],',',X_train.shape[2],',',X_train.shape[3],')')
@@ -186,14 +199,16 @@ y_test = to_categorical(y_test)
 print(y_test.shape[0])
 
 
-# In[ ]:
+# In[12]:
 
 
 train_Resnet50 = extract_Resnet50(X_train)
+del X_train
 test_Resnet50 = extract_Resnet50(X_test)
+del X_test
 
 
-# In[ ]:
+# In[13]:
 
 
 Resnet50_model = Sequential()
@@ -203,14 +218,14 @@ Resnet50_model.add(Dense(len(dog_names), activation='softmax'))
 Resnet50_model.summary()
 
 
-# In[ ]:
+# In[14]:
 
 
 sgd = SGD(lr=0.01, clipnorm=1, decay=1e-6, momentum = 0.9, nesterov=True)
 Resnet50_model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
 
-# In[ ]:
+# In[15]:
 
 
 run_name = "linear"
@@ -221,7 +236,7 @@ checkpoint_filepath = os.path.join(logpath,  "best_Resnet50_model.h5")
 checkpoint_cb = ModelCheckpoint(checkpoint_filepath, save_best_only=True)
 
 
-# In[ ]:
+# In[16]:
 
 
 Resnet50_model.fit(train_Resnet50, y_train,
@@ -232,7 +247,7 @@ Resnet50_model.fit(train_Resnet50, y_train,
           callbacks=[tbcb,checkpoint_cb])
 
 
-# In[ ]:
+# In[17]:
 
 
 score = Resnet50_model.evaluate(test_Resnet50, y_test, verbose=0)
@@ -240,28 +255,28 @@ print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
 
-# In[ ]:
+# In[20]:
 
 
-Resnet50_model.load_weights('../dogFlap/logs_linear/linear-4/best_Resnet50_model.h5')
+Resnet50_model.load_weights('../dogFlap/logs_linear/linear-9/best_Resnet50_model.h5')
 
 
-# In[ ]:
+# In[21]:
 
 
 test_dir = '../dogFlap/dog-breed-identification/test/'
 list_test = [test_dir+f for f in os.listdir(test_dir) if re.search('jpg|JPG', f)]
 
 
-# In[ ]:
+# In[131]:
 
 
-img_path = list_test[0]
+img_path = "../dogFlap/gaspard.jpg"
 dog = cv2.imread(img_path,0)
 plt.imshow(dog,cmap='gray')
 
 
-# In[ ]:
+# In[132]:
 
 
 def Resnet50_predict_breed(img_path):
@@ -274,8 +289,14 @@ def Resnet50_predict_breed(img_path):
     return dog_names[np.argmax(predicted_vector)]
 
 
-# In[ ]:
+# In[133]:
 
 
 Resnet50_predict_breed(img_path)
+
+
+# In[ ]:
+
+
+
 
