@@ -3,7 +3,7 @@ This file is set to resume the project.
 
 ## Presentation
 ### General idea of the project
-The project consists in making a cat flap. The goal is to detect the presence of a specific cat so that the hatch unlocks and the cat can enter into the house.The detection of other animals would leave the hatch closed and an audible signal could be emitted. For example, if a foreign cat shows up at the door, a bark will be issued.
+The project consists in making a dog flap. The goal is to detect the presence of a specific dog so that the hatch unlocks and the dog can enter into the house.The detection of other animals would leave the hatch closed and an audible signal could be emitted. For example, if a foreign dog or a cat shows up at the door, a bark will be issued.
 The part concerning artificial intelligence will be managed by the raspberry and the sound elements and displays will be managed by an Arduino
 
 ### Detailed description of the project
@@ -58,5 +58,5 @@ So as we have just said, the Arduino code had to be adjusted to respond to the m
 -Some actuators have also been temporarily replaced because we preferred to avoid buying elements with the current situation. Thus, the locks were simply replaced by servo motors fitted with propellers which rotate 180 ° to block or not the door.
 -The display of information on the LCD has also been updated. (Positioning of the text and erasing of it as things progress).
 
-Thus the main objectives have been achieved and a video presenting the operation of the project can be found at this address.( https://web.microsoftstream.com/video/aee66bf4-123b-43bf-8bfe-c2077993a8b4 )
+Thus the main objectives have been achieved and a video presenting the operation of the project can be found at this address.( https://henallux-my.sharepoint.com/:v:/g/personal/etu30602_henallux_be/ERCnO1R38XRGn95g62237gsBmnrNxXemxKM-laoPfos4Xg?e=497sv5 )
 Improvements have already been thought of such as the addition of a second database to recognize a second breed of dogs or even the procedure to be implemented so that the Raspberry can learn for itself a new breed by assimilating it to a name. These points will be addressed in the final written report.
