@@ -1,13 +1,14 @@
-
 // librairies
 #include <SoftwareSerial.h>
 #include <Arduino.h>
 #include <LiquidCrystal.h>
+#include <Servo.h>
 
+Servo myServo;
 
 #define BUZZER 9
-#define DOORLOCKA 7
-#define DOORLOCKB 8
+//#define DOORLOCKA 7
+//#define DOORLOCKB 8
 
 // Initialisation des pin pour le LCD  http://www.arduino.cc/en/Tutorial/LiquidCrystalDisplay
 
@@ -15,18 +16,26 @@ const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 
+
   int MessageRPI = 0;                            // initialisation des données
   int MessageRead = 0;
   int Loop1 = 0;
   int Loop2 = 0;
   
+
 void setup() {
+  // put your setup code here, to run once:
 
+  Serial.begin(9600);
+  Serial.print("Start");    
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, LOW);  
 
-  
-  // pinMode(LED_BUILTIN, OUTPUT);                //debug
-  
-  // initialisation du timer5
+   
+/**************************************************************************************************************************************************
+ * ************************************************ POUR ARDUINO MEGA*****************************************************************************
+
+       // initialisation du timer5
   noInterrupts();                                 // désactivation des interruption pendant l'initialisation
   TCCR5A = 0;
   TCCR5B = 0;
@@ -40,7 +49,9 @@ void setup() {
   Serial.begin(9600);
   Serial.print("Start");                          // debug
 
-  // initialisation de l'écran LCD
+
+****************************************************************************************************************************************************************************/
+   // initialisation de l'écran LCD
 
   lcd.begin(16, 2);
   lcd.print("Bonjour");
@@ -48,73 +59,72 @@ void setup() {
   
   // Déclaration des entrée - sorties
 pinMode(BUZZER, OUTPUT); 
-pinMode(DOORLOCKA, OUTPUT); 
-pinMode(DOORLOCKB, OUTPUT); 
-  
-  
+//pinMode(DOORLOCKA, OUTPUT); 
+//pinMode(DOORLOCKB, OUTPUT); 
+
+  myServo.attach(10);
 }
 
+/**************************************INTERRUPTION ARDUINO MEGA**********************************************************
 ISR(TIMER5_COMPA_vect)                            // Fonction activée à chaque interruption du timer5 quand le timer atteint la valeur OCR5A
-{
-  
-  if (MessageRead = 1)                             // Bon chien
-  {
-    if (Loop1 = 0)
-    {
-     Serial.print("ChienRentre");
-    }
-    lcd.print("Le chien est devant la porte");    // activation de la porte pendant 10s
-    digitalWrite(DOORLOCKA, HIGH);
-    digitalWrite(DOORLOCKB, HIGH);
-    Loop1 =+ 1;
-    if(Loop1 > 9)
-    {
-      digitalWrite(DOORLOCKA, LOW);
-      digitalWrite(DOORLOCKB, LOW);
-      lcd.print("Le chien est rentré");
-      Loop1 = 0;
-      MessageRead =0;
-      }
-  }
-
-  else if (MessageRead = 2)                        // Intrus
-  {
-    if (Loop2 = 0)
-    {
-     Serial.print("IntrusDetecte");
-    }
-    tone(BUZZER, 3000);                           //Buzz pendant 5s à 3Khz
-    Loop2 =+ 1;
-    lcd.print("Un intrus ! ");
-    if(Loop2 > 4)
-    {               
-      Loop2 = 0;
-      MessageRead =0;
-      noTone(BUZZER);
-      
-      }
-  }
-
-
-
+{ 
 }
+/***************************************************************************************************************************/
+
 
 void loop() {
+  // put your main code here, to run repeatedly:
 
- lcd.print("En attente");
-  if (Serial.available() > 0) {                   // lecture du message serial venant du RPI
+
+ if (Serial.available() > 0) {                   // lecture du message serial venant du RPI
     MessageRead = 0;
     MessageRPI = Serial.read();
-    // Serial.print(MessageRPI);                  //debug
-    MessageRead = MessageRPI;
+    Serial.print(MessageRPI);                  //debug
 
-    // réinitialisation des variables après réception d'un message
-    Loop1 = 0;
-    Loop2 = 0;
-    
-    
-  }
-  
-  
+    if (MessageRPI == '1')
+    {
+      lcd.setCursor(0,0);
+      lcd.print("Le chien est");    // activation de la porte pendant 10s
+      lcd.setCursor(0,1);
+      lcd.print("devant la porte");
+      Serial.print("Le chien est devant la porte");
+      digitalWrite(LED_BUILTIN, HIGH);
+//      digitalWrite(DOORLOCKA, HIGH);
+//      digitalWrite(DOORLOCKB, HIGH);
+      myServo.write(179);
+      delay(10000);
 
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Le chien est");             // Desactivation
+      lcd.setCursor(0,1);
+      lcd.print("rentre");
+      Serial.print("Le chien est rentré");
+      digitalWrite(LED_BUILTIN, LOW);
+//      digitalWrite(DOORLOCKA, LOW);
+//      digitalWrite(DOORLOCKB, LOW);
+      myServo.write(0);
+      delay(3000);
+      lcd.clear();
+    }
+
+      
+    if (MessageRPI == '2')
+    {
+      Serial.print("Intrus Detecte");
+      lcd.setCursor(0,0);
+      lcd.print("Intrus Detecte");
+      digitalWrite(LED_BUILTIN, LOW);
+      tone(BUZZER, 3000);                           //Buzz pendant 5s à 3Khz
+      delay(5000);
+ 
+      Serial.print("Intrus Partis");                // désactivation
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Intrus partis");
+      noTone(BUZZER);
+      delay(3000);
+      lcd.clear();
+      }
+    }
 }
