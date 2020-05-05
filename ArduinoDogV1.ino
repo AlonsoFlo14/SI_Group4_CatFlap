@@ -2,10 +2,13 @@
 #include <SoftwareSerial.h>
 #include <Arduino.h>
 #include <LiquidCrystal.h>
+#include <Servo.h>
+
+Servo myServo;
 
 #define BUZZER 9
-#define DOORLOCKA 7
-#define DOORLOCKB 8
+//#define DOORLOCKA 7
+//#define DOORLOCKB 8
 
 // Initialisation des pin pour le LCD  http://www.arduino.cc/en/Tutorial/LiquidCrystalDisplay
 
@@ -58,6 +61,8 @@ void setup() {
 pinMode(BUZZER, OUTPUT); 
 //pinMode(DOORLOCKA, OUTPUT); 
 //pinMode(DOORLOCKB, OUTPUT); 
+
+  myServo.attach(10);
 }
 
 /**************************************INTERRUPTION ARDUINO MEGA**********************************************************
@@ -78,33 +83,48 @@ void loop() {
 
     if (MessageRPI == '1')
     {
-      
-      lcd.print("Le chien est devant la porte");    // activation de la porte pendant 10s
+      lcd.setCursor(0,0);
+      lcd.print("Le chien est");    // activation de la porte pendant 10s
+      lcd.setCursor(0,1);
+      lcd.print("devant la porte");
       Serial.print("Le chien est devant la porte");
       digitalWrite(LED_BUILTIN, HIGH);
-      digitalWrite(DOORLOCKA, HIGH);
-      digitalWrite(DOORLOCKB, HIGH);
+//      digitalWrite(DOORLOCKA, HIGH);
+//      digitalWrite(DOORLOCKB, HIGH);
+      myServo.write(179);
       delay(10000);
-       
-      lcd.print("Le chien est rentré");             // Desactivation
+
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Le chien est");             // Desactivation
+      lcd.setCursor(0,1);
+      lcd.print("rentre");
       Serial.print("Le chien est rentré");
       digitalWrite(LED_BUILTIN, LOW);
-      digitalWrite(DOORLOCKA, LOW);
-      digitalWrite(DOORLOCKB, LOW);
+//      digitalWrite(DOORLOCKA, LOW);
+//      digitalWrite(DOORLOCKB, LOW);
+      myServo.write(0);
+      delay(3000);
+      lcd.clear();
     }
 
       
     if (MessageRPI == '2')
     {
       Serial.print("Intrus Detecte");
+      lcd.setCursor(0,0);
       lcd.print("Intrus Detecte");
-      digitalWrite(LED_BUILTIN, HIGH);
+      digitalWrite(LED_BUILTIN, LOW);
       tone(BUZZER, 3000);                           //Buzz pendant 5s à 3Khz
       delay(5000);
  
       Serial.print("Intrus Partis");                // désactivation
+      lcd.clear();
+      lcd.setCursor(0,0);
       lcd.print("Intrus partis");
       noTone(BUZZER);
+      delay(3000);
+      lcd.clear();
       }
     }
 }
