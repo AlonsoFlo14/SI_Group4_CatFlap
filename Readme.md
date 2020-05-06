@@ -1,5 +1,9 @@
 # SI - Group4 - Dog Flap project
-Getting started with the project : The project consists in making a dog flap. The goal is to detect the presence of a specific dog in front of the door.
+Getting started with the project :
+So, the project consists in making a dog flap. The goal is to detect the presence of a specific dog breed with the camera so that the hatch unlocks, and the dog can enter the house. The detection of other animals would leave the hatch closed by a servo motor and an audible signal could be emitted by the buzzers. For example, if a cat shows up at the door, a shrill sound will be emitted. If a dog of another breed is in front of the flap, he will not be able to enter either. The interest of the project is therefore to personalize the dog flap so that it only corresponds to dogs owned by a family. In addition to differentiating dogs from other animals, it will therefore be necessary to recognize one or more dog breeds precisely. A screen will also display various information such as welcoming elements for the family dog or, on the contrary, effects that will repel intruders in association with the buzzers.
+
+
+<img src="Images/DogHouse.jpg" width="400" height="500">  <img src="Images/DogHouse2.jpg" width="400" height="500">
 
 ## Prerequisites
 ### Hardware
@@ -44,3 +48,8 @@ Getting started with the project : The project consists in making a dog flap. Th
 <img src="Images/PuttyConfi1.png" width="425" height="425">  <img src="Images/PuttyConfi2.png" width="425" height="425">
 
 •	Now click on “open”. You must enter your username (the default  one is “pi”) and your password (the default one is “raspberry”). (On Mac OS, use simply ssh -X pi@xxx.xxx.xxx.xxx in the terminal)
+
+### Authors
+•	__Alonso Florian__ - *Programming of the part on artificial intelligence (recognition) (SVM + implementation of CNN on the Raspberry)*
+•	__Humblet Christophe__ - *Programming of the Arduino part*
+•	__Schmadtke Arnaud__ - *Programming of the part on artificial intelligence (recognition) (CNN + implementation of CNN on the Raspberry)*
